@@ -1,0 +1,45 @@
+import itertools
+
+# Function to calculate the total travel distance for a given path
+def calculate_total_distance(path, distance_matrix):
+    total_distance = 0
+    for i in range(len(path) - 1):
+        total_distance += distance_matrix[path[i]][path[i + 1]]
+    # Add the distance to return to the starting city
+    total_distance += distance_matrix[path[-1]][path[0]]
+    return total_distance
+
+# Function to solve the TSP using brute force (all permutations)
+def traveling_salesman_bruteforce(distance_matrix):
+    n = len(distance_matrix)
+    # Generate all permutations of cities
+    cities = list(range(n))
+    permutations = itertools.permutations(cities)
+
+    # Initialize the minimum distance to a large value
+    min_distance = float('inf')
+    best_path = None
+
+    # Iterate over all permutations to find the shortest path
+    for path in permutations:
+        current_distance = calculate_total_distance(path, distance_matrix)
+        if current_distance < min_distance:
+            min_distance = current_distance
+            best_path = path
+
+    return min_distance, best_path
+
+# Example: A 4-city distance matrix
+distance_matrix = [
+    [0, 10, 15, 20],
+    [10, 0, 35, 25],
+    [15, 35, 0, 30],
+    [20, 25, 30, 0]
+]
+
+# Solve the TSP
+min_distance, best_path = traveling_salesman_bruteforce(distance_matrix)
+
+# Output the result
+print("Minimum Distance:", min_distance)
+print("Best Path:", best_path)
