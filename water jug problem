@@ -1,0 +1,65 @@
+from collections import deque
+
+def water_jug_problem(capacity1, capacity2, target):
+    # If the target is impossible to reach, return None
+    if target > max(capacity1, capacity2) or target % gcd(capacity1, capacity2) != 0:
+        return None
+
+    # BFS to find the solution
+    visited = set()  # Set to keep track of visited states
+    queue = deque([(0, 0)])  # Initial state (jug1, jug2)
+    parent_map = {}  # To track the path
+
+    # Function to compute the greatest common divisor
+    def gcd(a, b):
+        while b:
+            a, b = b, a % b
+        return a
+
+    while queue:
+        jug1, jug2 = queue.popleft()
+
+        # If the target is found in either jug
+        if jug1 == target or jug2 == target:
+            path = []
+            while (jug1, jug2) in parent_map:
+                path.append((jug1, jug2))
+                jug1, jug2 = parent_map[(jug1, jug2)]
+            path.append((0, 0))  # Add the initial state
+            return path[::-1]  # Reverse the path to get the sequence from start to goal
+
+        # Mark the state as visited
+        visited.add((jug1, jug2))
+
+        # List of all possible actions:
+        possible_actions = [
+            (capacity1, jug2),  # Fill jug1 completely
+            (jug1, capacity2),  # Fill jug2 completely
+            (0, jug2),          # Empty jug1
+            (jug1, 0),          # Empty jug2
+            (jug1 - min(jug1, capacity2 - jug2), jug2 + min(jug1, capacity2 - jug2)),  # Pour jug1 into jug2
+            (jug1 + min(jug2, capacity1 - jug1), jug2 - min(jug2, capacity1 - jug1))   # Pour jug2 into jug1
+        ]
+
+        for new_jug1, new_jug2 in possible_actions:
+            if (new_jug1, new_jug2) not in visited:
+                visited.add((new_jug1, new_jug2))
+                parent_map[(new_jug1, new_jug2)] = (jug1, jug2)
+                queue.append((new_jug1, new_jug2))
+
+    return None  # No solution found
+
+def print_solution(solution):
+    if solution is None:
+        print("No solution exists")
+    else:
+        for state in solution:
+            print(f"Jug1: {state[0]} | Jug2: {state[1]}")
+
+# Example usage:
+capacity1 = 4
+capacity2 = 3
+target = 2
+
+solution = water_jug_problem(capacity1, capacity2, target)
+print_solution(solution)
