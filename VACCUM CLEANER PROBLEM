@@ -1,0 +1,65 @@
+class VacuumCleaner:
+    def __init__(self, grid, start_pos):
+        self.grid = grid
+        self.position = start_pos
+        self.rows = len(grid)
+        self.cols = len(grid[0])
+
+    # Check if a cell is dirty
+    def is_dirty(self, position):
+        x, y = position
+        return self.grid[x][y] == 1
+
+    # Clean the current position
+    def clean(self):
+        x, y = self.position
+        if self.is_dirty(self.position):
+            print(f"Cleaning position {self.position}")
+            self.grid[x][y] = 0  # Clean the cell
+
+    # Move to a neighboring cell if within bounds
+    def move(self, direction):
+        x, y = self.position
+        if direction == "UP" and x > 0:
+            self.position = (x - 1, y)
+        elif direction == "DOWN" and x < self.rows - 1:
+            self.position = (x + 1, y)
+        elif direction == "LEFT" and y > 0:
+            self.position = (x, y - 1)
+        elif direction == "RIGHT" and y < self.cols - 1:
+            self.position = (x, y + 1)
+
+    # Check if all cells are clean
+    def all_clean(self):
+        return all(self.grid[i][j] == 0 for i in range(self.rows) for j in range(self.cols))
+
+    # Perform the vacuum cleaning task
+    def clean_grid(self):
+        moves = ["UP", "DOWN", "LEFT", "RIGHT"]
+        while not self.all_clean():
+            self.clean()
+            cleaned = False
+            for move in moves:
+                self.move(move)
+                if self.is_dirty(self.position):
+                    self.clean()
+                    cleaned = True
+                else:
+                    self.move(moves[(moves.index(move) + 2) % 4])  # Move back if we don't clean
+            # If no cleaning happened, we stop moving
+            if not cleaned:
+                print("No more dirty cells detected.")
+                break
+
+# Define the grid with dirty and clean cells
+grid = [
+    [1, 0, 0], 
+    [1, 1, 0], 
+    [0, 0, 1]
+]
+
+# Initialize vacuum cleaner starting at (0, 0)
+vacuum = VacuumCleaner(grid, (0, 0))
+
+# Perform the cleaning
+vacuum.clean_grid()
