@@ -1,0 +1,61 @@
+from collections import deque
+
+# Define the valid moves (1 or 2 missionaries/cannibals move)
+def valid_move(m, c, boat_side):
+    # Ensure the number of cannibals does not exceed missionaries on either side
+    if m < c and m > 0:
+        return False
+    if (3 - m) < (3 - c) and (3 - m) > 0:
+        return False
+    return True
+
+# BFS to solve the problem
+def missionaries_and_cannibals():
+    initial_state = (3, 3, 0)  # 3 missionaries, 3 cannibals, and the boat on the left side
+    goal_state = (0, 0, 1)  # All missionaries and cannibals are on the right side
+    queue = deque([(initial_state, [])])  # Queue stores the state and the path to reach it
+    visited = set()  # Set to keep track of visited states
+
+    # Define the possible moves (number of missionaries, number of cannibals)
+    moves = [(1, 0), (2, 0), (0, 1), (0, 2), (1, 1)]  # Boat can carry 1 or 2 people
+
+    while queue:
+        state, path = queue.popleft()
+        m, c, boat = state
+
+        # If the goal is reached, return the solution path
+        if state == goal_state:
+            return path + [state]
+
+        # Skip if the state has been visited before
+        if state in visited:
+            continue
+
+        visited.add(state)
+
+        # Try all possible moves
+        for move in moves:
+            new_m = m - move[0] if boat == 0 else m + move[0]
+            new_c = c - move[1] if boat == 0 else c + move[1]
+            new_boat = 1 - boat  # Switch the boat's side
+
+            # Check if the new state is valid
+            if 0 <= new_m <= 3 and 0 <= new_c <= 3 and valid_move(new_m, new_c, new_boat):
+                new_state = (new_m, new_c, new_boat)
+                queue.append((new_state, path + [state]))
+
+    return None  # Return None if no solution is found
+
+# Function to print the solution path
+def print_solution(solution):
+    if solution is None:
+        print("No solution found.")
+    else:
+        print("Solution path:")
+        for state in solution:
+            m, c, b = state
+            print(f"Missionaries: {m}, Cannibals: {c}, Boat on {'Left' if b == 0 else 'Right'}")
+
+# Solve the problem
+solution = missionaries_and_cannibals()
+print_solution(solution)
