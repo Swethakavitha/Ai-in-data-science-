@@ -1,0 +1,59 @@
+# Define the map structure (adjacency list)
+# Regions: A, B, C, D
+# Adjacency list: A is adjacent to B, C; B is adjacent to A, D; C is adjacent to A, D; D is adjacent to B, C
+adjacency_list = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D'],
+    'C': ['A', 'D'],
+    'D': ['B', 'C']
+}
+
+# Define the colors available
+colors = ['Red', 'Green', 'Blue']
+
+# Function to check if the current assignment is valid (no two adjacent regions have the same color)
+def is_valid(assignment, region, color):
+    for neighbor in adjacency_list[region]:
+        if neighbor in assignment and assignment[neighbor] == color:
+            return False
+    return True
+
+# Backtracking function to solve the map coloring problem
+def map_coloring(assignment, regions):
+    # If all regions are colored, return the assignment
+    if len(assignment) == len(regions):
+        return assignment
+
+    # Pick the next region to color
+    uncolored_regions = [region for region in regions if region not in assignment]
+    region = uncolored_regions[0]
+
+    # Try each color in the color set
+    for color in colors:
+        if is_valid(assignment, region, color):
+            # Assign the color to the region
+            assignment[region] = color
+
+            # Recurse to color the next region
+            result = map_coloring(assignment, regions)
+            if result:
+                return result
+
+            # If no valid assignment found, backtrack
+            del assignment[region]
+
+    return None  # No solution found
+
+# List of regions
+regions = ['A', 'B', 'C', 'D']
+
+# Start with an empty assignment
+assignment = {}
+
+# Solve the problem
+solution = map_coloring(assignment, regions)
+
+if solution:
+    print("Solution found:", solution)
+else:
+    print("No solution found.")
