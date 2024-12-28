@@ -1,0 +1,22 @@
+def alpha_beta_pruning(node, depth, alpha, beta, maximizing_player):
+    if depth == 0 or game_over(node):
+        return evaluate(node)  # Evaluate leaf node
+
+    if maximizing_player:
+        max_eval = -infinity
+        for child in children(node):
+            eval = alpha_beta_pruning(child, depth - 1, alpha, beta, False)
+            max_eval = max(max_eval, eval)
+            alpha = max(alpha, eval)  # Update alpha
+            if beta <= alpha:  # Prune the branch
+                break
+        return max_eval
+    else:
+        min_eval = infinity
+        for child in children(node):
+            eval = alpha_beta_pruning(child, depth - 1, alpha, beta, True)
+            min_eval = min(min_eval, eval)
+            beta = min(beta, eval)  # Update beta
+            if beta <= alpha:  # Prune the branch
+                break
+        return min_eval
