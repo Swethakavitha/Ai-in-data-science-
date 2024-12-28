@@ -1,0 +1,81 @@
+class VacuumCleanerRFS:
+    def __init__(self, grid, start_pos):
+        self.grid = grid
+        self.start_pos = start_pos
+        self.rows = len(grid)
+        self.cols = len(grid[0])
+        self.directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # up, down, left, right
+    
+    # Check if a cell is dirty
+    def is_dirty(self, x, y):
+        return self.grid[x][y] == 1
+    
+    # Clean the current position
+    def clean(self, x, y):
+        if self.is_dirty(x, y):
+            self.grid[x][y] = 0  # Clean the cell
+
+    # Check if all cells are clean
+    def all_clean(self):
+        return all(self.grid[i][j] == 0 for i in range(self.rows) for j in range(self.cols))
+
+    # Recursive Forward Search
+    def rfs(self, position, path, visited):
+        x, y = position
+        
+        # If all cells are clean, return the current path
+        if self.all_clean():
+            return path
+
+        # Mark the current state as visited (position + grid configuration)
+        grid_tuple = tuple(map(tuple, self.grid))  # Convert grid to a tuple so it can be used in visited set
+        if (grid_tuple, position) in visited:
+            return None  # Avoid revisiting the same state
+        
+        # Mark the current state as visited
+        visited.add((grid_tuple, position))
+
+        # Try all possible moves (up, down, left, right)
+        for dx, dy in self.directions:
+            new_x, new_y = x + dx, y + dy
+
+            # Check if the new position is within bounds
+            if 0 <= new_x < self.rows and 0 <= new_y < self.cols:
+                # Clean the new cell if it's dirty
+                self.clean(new_x, new_y)
+
+                # Recur to the new position
+                new_path = path + [(new_x, new_y)]
+                result = self.rfs((new_x, new_y), new_path, visited)
+
+                # If a solution is found, return the result
+                if result is not None:
+                    return result
+
+                # Backtrack: Restore the grid if the path didn't work out
+                self.grid[new_x][new_y] = 1  # Restore the cell to dirty if we didn't find the solution
+
+        return None  # If no solution was found, return None
+
+
+# Example grid: 1 represents dirty, 0 represents clean
+grid = [
+    [1, 0, 0], 
+    [1, 1, 0], 
+    [0, 0, 1]
+]
+
+# Initialize the vacuum cleaner with the starting position (0, 0)
+vacuum = VacuumCleanerRFS(grid, (0, 0))
+
+# Run Recursive Forward Search (RFS) to clean the grid
+visited = set()  # To avoid revisiting the same state
+path = vacuum.rfs(vacuum.start_pos, [vacuum.start_pos], visited)
+
+# Print the solution path
+if path is None:
+    print("No solution found.")
+else:
+    print("Solution path:")
+    for step in path:
+        print(f"Move to position: {step}")
