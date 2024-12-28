@@ -1,0 +1,49 @@
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.datasets import load_iris
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.utils import to_categorical
+
+# Load the Iris dataset
+iris = load_iris()
+X = iris.data  # Features
+y = iris.target  # Target (class labels)
+
+# One-hot encode the target labels
+y = to_categorical(y, 3)
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Feature scaling (normalize the input features)
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Create the Feedforward Neural Network model
+model = Sequential()
+
+# Input layer and first hidden layer
+model.add(Dense(units=8, activation='relu', input_dim=4))
+
+# Second hidden layer
+model.add(Dense(units=8, activation='relu'))
+
+# Output layer (softmax activation for multi-class classification)
+model.add(Dense(units=3, activation='softmax'))
+
+# Compile the model
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+# Train the model
+model.fit(X_train, y_train, epochs=100, batch_size=5, validation_data=(X_test, y_test))
+
+# Evaluate the model
+loss, accuracy = model.evaluate(X_test, y_test)
+print(f"Test Accuracy: {accuracy * 100:.2f}%")
+
+# Make predictions
+predictions = model.predict(X_test)
+print(f"Predictions:\n{predictions}")
