@@ -1,0 +1,95 @@
+import heapq
+
+# The goal state for the 8-puzzle
+goal_state = (1, 2, 3, 4, 5, 6, 7, 8, 0)
+
+# Directions for moving in the puzzle (up, down, left, right)
+moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+class PuzzleState:
+    def __init__(self, puzzle, parent=None, move=None, g=0, h=0):
+        self.puzzle = puzzle
+        self.parent = parent
+        self.move = move
+        self.g = g  # cost from start
+        self.h = h  # heuristic (Manhattan distance)
+        self.f = g + h  # total cost function
+        
+    def __lt__(self, other):
+        return self.f < other.f
+
+    def is_goal(self):
+        return self.puzzle == goal_state
+
+    def get_blank_index(self):
+        return self.puzzle.index(0)
+
+    def get_neighbors(self):
+        neighbors = []
+        blank_index = self.get_blank_index()
+        row, col = divmod(blank_index, 3)
+        
+        for move in moves:
+            new_row, new_col = row + move[0], col + move[1]
+            if 0 <= new_row < 3 and 0 <= new_col < 3:
+                new_blank_index = new_row * 3 + new_col
+                new_puzzle = list(self.puzzle)
+                new_puzzle[blank_index], new_puzzle[new_blank_index] = new_puzzle[new_blank_index], new_puzzle[blank_index]
+                neighbors.append(PuzzleState(tuple(new_puzzle), self, move, self.g + 1, self.heuristic(tuple(new_puzzle))))
+                
+        return neighbors
+
+    def heuristic(self, puzzle):
+        distance = 0
+        for i in range(9):
+            if puzzle[i] != 0:
+                goal_pos = goal_state.index(puzzle[i])
+                curr_row, curr_col = divmod(i, 3)
+                goal_row, goal_col = divmod(goal_pos, 3)
+                distance += abs(curr_row - goal_row) + abs(curr_col - goal_col)
+        return distance
+    
+    def print_puzzle(self):
+        for i in range(0, 9, 3):
+            print(self.puzzle[i:i+3])
+
+def a_star_search(start_puzzle):
+    start_state = PuzzleState(start_puzzle, None, None, 0, PuzzleState(start_puzzle).heuristic(start_puzzle))
+    open_list = []
+    closed_list = set()
+    
+    heapq.heappush(open_list, start_state)
+    
+    while open_list:
+        current_state = heapq.heappop(open_list)
+        
+        if current_state.is_goal():
+            solution = []
+            while current_state:
+                solution.append(current_state)
+                current_state = current_state.parent
+            return solution[::-1]
+        
+        closed_list.add(current_state.puzzle)
+        
+        for neighbor in current_state.get_neighbors():
+            if neighbor.puzzle not in closed_list:
+                heapq.heappush(open_list, neighbor)
+    
+    return None
+
+def print_solution(solution):
+    for state in solution:
+        print(f"Move: {state.move} (Cost: {state.g})")
+        state.print_puzzle()
+        print()
+
+# Example: Solving an initial puzzle state
+initial_puzzle = (1, 2, 3, 4, 5, 6, 7, 0, 8)
+solution = a_star_search(initial_puzzle)
+
+if solution:
+    print("Solution found!")
+    print_solution(solution)
+else:
+    print("No solution exists!")
