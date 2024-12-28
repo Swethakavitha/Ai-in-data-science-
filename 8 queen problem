@@ -1,0 +1,39 @@
+def is_safe(board, row, col):
+    # Check the column
+    for i in range(row):
+        if board[i] == col or \
+           board[i] - i == col - row or \
+           board[i] + i == col + row:
+            return False
+    return True
+
+def solve_queens(board, row):
+    # If all queens are placed
+    if row == 8:
+        print_board(board)
+        return True
+    
+    # Try placing a queen in all columns of the current row
+    for col in range(8):
+        if is_safe(board, row, col):
+            board[row] = col  # Place the queen
+            if solve_queens(board, row + 1):  # Move to the next row
+                return True
+            board[row] = -1  # Backtrack if no solution
+
+    return False
+
+def print_board(board):
+    for row in range(8):
+        row_str = ['Q' if col == board[row] else '.' for col in range(8)]
+        print(' '.join(row_str))
+    print()
+
+def eight_queens():
+    # Initialize the board
+    board = [-1] * 8  # -1 means no queen placed in that row
+    if not solve_queens(board, 0):
+        print("No solution found.")
+
+# Solve and print the solution
+eight_queens()
