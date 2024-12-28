@@ -1,0 +1,33 @@
+import itertools
+
+def solve_cryptarithmetic():
+    # Define the words as variables
+    words = ['SEND', 'MORE', 'MONEY']
+    
+    # Generate all permutations of 10 digits (0-9) for 8 letters
+    letters = 'SENDMORE'
+    unique_digits = itertools.permutations(range(10), len(set(letters)))
+    
+    for perm in unique_digits:
+        # Create a dictionary mapping letters to digits
+        letter_to_digit = dict(zip(set(letters), perm))
+        
+        # Convert the words to their numeric values using the current letter-to-digit mapping
+        send = int(''.join(str(letter_to_digit[letter]) for letter in words[0]))
+        more = int(''.join(str(letter_to_digit[letter]) for letter in words[1]))
+        money = int(''.join(str(letter_to_digit[letter]) for letter in words[2]))
+        
+        # Check if the equation is satisfied
+        if send + more == money:
+            return letter_to_digit  # Return the solution (mapping of letters to digits)
+    
+    return None  # If no solution is found
+
+# Solve the puzzle
+solution = solve_cryptarithmetic()
+
+if solution:
+    print("Solution found:")
+    print(solution)
+else:
+    print("No solution found.")
