@@ -1,0 +1,78 @@
+from collections import deque
+
+class VacuumCleanerBFS:
+    def __init__(self, grid, start_pos):
+        self.grid = grid
+        self.start_pos = start_pos
+        self.rows = len(grid)
+        self.cols = len(grid[0])
+        self.directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # up, down, left, right
+    
+    def is_dirty(self, x, y):
+        return self.grid[x][y] == 1
+
+    def clean(self, x, y):
+        if self.is_dirty(x, y):
+            self.grid[x][y] = 0  # Clean the cell
+
+    def all_clean(self):
+        return all(self.grid[i][j] == 0 for i in range(self.rows) for j in range(self.cols))
+
+    def bfs(self):
+        # State will be a tuple (x, y, grid_state)
+        # Initialize the queue with the start position and the initial grid state
+        initial_state = (self.start_pos, [row[:] for row in self.grid])  # Make a copy of the grid
+        queue = deque([(initial_state, [])])  # Store state and the path (sequence of moves)
+        visited = set()  # To avoid revisiting the same state
+        
+        # Convert the initial grid state to a tuple so it can be used in a set
+        visited.add((tuple(map(tuple, self.grid)), self.start_pos))
+        
+        while queue:
+            (position, current_grid), path = queue.popleft()
+            x, y = position
+            
+            # If all cells are clean, return the path to this point
+            if self.all_clean():
+                return path
+            
+            # Try all 4 possible moves (up, down, left, right)
+            for dx, dy in self.directions:
+                new_x, new_y = x + dx, y + dy
+                
+                # Check if the new position is within bounds
+                if 0 <= new_x < self.rows and 0 <= new_y < self.cols:
+                    # Clean the new cell if it's dirty
+                    new_grid = [row[:] for row in current_grid]  # Make a copy of the grid
+                    self.clean(new_x, new_y)  # Clean the new position
+                    new_grid_tuple = tuple(map(tuple, new_grid))  # Convert to tuple for immutability
+                    
+                    # If this state has not been visited
+                    if (new_grid_tuple, (new_x, new_y)) not in visited:
+                        visited.add((new_grid_tuple, (new_x, new_y)))
+                        new_path = path + [(new_x, new_y)]  # Add the new position to the path
+                        queue.append(((new_x, new_y), new_grid, new_path))  # Add new state to the queue
+
+        return None  # Return None if no solution exists
+
+
+# Example grid: 1 represents dirty, 0 represents clean
+grid = [
+    [1, 0, 0],
+    [1, 1, 0],
+    [0, 0, 1]
+]
+
+# Initialize the vacuum cleaner with the starting position (0, 0)
+vacuum = VacuumCleanerBFS(grid, (0, 0))
+
+# Run BFS to clean the grid
+path = vacuum.bfs()
+
+# Print the solution path
+if path is None:
+    print("No solution found.")
+else:
+    print("Solution path:")
+    for step in path:
+        print(f"Move to position: {step}")
