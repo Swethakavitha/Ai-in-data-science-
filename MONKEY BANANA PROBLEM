@@ -1,0 +1,32 @@
+% Facts
+at(monkey, ground).  % The monkey starts on the ground.
+at(box, ground).     % The box starts on the ground.
+at(banana, high).    % The banana is hanging high above the ground.
+on_box(monkey, no).  % The monkey is not on the box initially.
+
+% Actions
+move_box_to(Box, Location) :-
+    at(Box, ground),
+    \+ at(Box, Location),
+    retract(at(Box, ground)),
+    assert(at(Box, Location)),
+    write('The box has been moved to '), write(Location), nl.
+
+climb_on_box :-
+    at(monkey, ground),
+    at(box, ground),
+    \+ on_box(monkey, yes),
+    retract(on_box(monkey, no)),
+    assert(on_box(monkey, yes)),
+    write('The monkey climbs onto the box.'), nl.
+
+get_banana :-
+    on_box(monkey, yes),
+    at(banana, high),
+    write('The monkey gets the banana!'), nl.
+
+% Plan to solve the problem
+solve :-
+    move_box_to(box, under_banana),
+    climb_on_box,
+    get_banana.
