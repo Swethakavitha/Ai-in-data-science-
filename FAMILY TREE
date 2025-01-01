@@ -1,0 +1,11 @@
+% Parent-Child Relationships (facts)
+parent(john, mary).       % John is a parent of Mary
+parent(john, james).      % John is a parent of James
+parent(mary, alice).      % Mary is a parent of Alice
+parent(james, bob).       % James is a parent of Bob
+
+% Additional facts
+parent(susan, mary).     % Susan is a parent of Mary
+parent(susan, james).    % Susan is a parent of James
+parent(robert, alice).   % Robert is a parent of Alice
+parent(anna, bob).       % Anna is a parent of Bob
