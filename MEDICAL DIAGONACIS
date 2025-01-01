@@ -1,0 +1,27 @@
+% Facts: defining symptoms for diseases
+symptom(cold, sneezing).
+symptom(cold, cough).
+symptom(cold, runny_nose).
+
+symptom(flu, fever).
+symptom(flu, cough).
+symptom(flu, body_aches).
+
+symptom(covid19, fever).
+symptom(covid19, cough).
+symptom(covid19, difficulty_breathing).
+symptom(covid19, loss_of_taste).
+
+symptom(allergy, sneezing).
+symptom(allergy, itchy_eyes).
+
+% Rule to diagnose a disease based on symptoms
+diagnose(Disease) :-
+    disease(Disease, Symptoms),
+    forall(member(Symptom, Symptoms), symptom(_, Symptom)).
+
+% Disease and their associated symptoms
+disease(cold, [sneezing, cough, runny_nose]).
+disease(flu, [fever, cough, body_aches]).
+disease(covid19, [fever, cough, difficulty_breathing, loss_of_taste]).
+disease(allergy, [sneezing, itchy_eyes]).
