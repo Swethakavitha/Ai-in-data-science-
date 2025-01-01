@@ -1,0 +1,34 @@
+% Facts about people
+age(john, 25).
+age(susan, 16).
+age(mary, 20).
+age(steve, 17).
+
+has_license(john).
+has_license(mary).
+has_license(steve).
+
+is_professional_driver(steve).
+
+% Rule: A person can drive if they are over 18 and have a valid driving license
+can_drive(Person) :-
+    age(Person, Age),
+    Age > 18,
+    has_license(Person).
+
+% Rule: A professional driver can drive regardless of their age
+can_drive(Person) :-
+    is_professional_driver(Person).
+
+% Rule: A person under 18 but with parental consent can also drive
+can_drive(Person) :-
+    age(Person, Age),
+    Age =< 18,
+    has_license(Person),
+    parental_consent(Person).
+
+% Facts for parental consent
+parental_consent(steve).
+
+% Query: Check if Steve can drive
+% Example query: can_drive(steve). % This will return true as Steve is a professional driver, despite being under 18.
