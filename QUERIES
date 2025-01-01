@@ -1,0 +1,11 @@
+% Facts about birds and their ability to fly
+can_fly(eagle).
+can_fly(sparrow).
+can_fly(pigeon).
+can_fly(owl).
+can_fly(parrot).
+
+% Birds that cannot fly
+cannot_fly(ostrich).
+cannot_fly(penguin).
+cannot_fly(kiwi).
