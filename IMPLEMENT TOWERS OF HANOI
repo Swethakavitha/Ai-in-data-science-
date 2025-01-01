@@ -1,0 +1,15 @@
+% Move N disks from Source to Target using Aux as auxiliary
+hanoi(1, Source, Target, _) :-
+    write('Move disk 1 from '), write(Source), write(' to '), write(Target), nl.
+
+hanoi(N, Source, Target, Aux) :-
+    N > 1,
+    % Move the top N-1 disks from Source to Aux, using Target as auxiliary
+    M is N - 1,
+    hanoi(M, Source, Aux, Target),
+    
+    % Move the nth disk from Source to Target
+    write('Move disk '), write(N), write(' from '), write(Source), write(' to '), write(Target), nl,
+    
+    % Move the N-1 disks from Aux to Target, using Source as auxiliary
+    hanoi(M, Aux, Target, Source).
