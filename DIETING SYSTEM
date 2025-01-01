@@ -1,0 +1,11 @@
+% Facts defining the appropriate diet for a disease
+diet(diabetes, 'Low-sugar, low-carb diet').
+diet(hypertension, 'Low-sodium, balanced diet').
+diet(obesity, 'Calorie-controlled, low-fat diet').
+diet(anemia, 'Iron-rich diet with Vitamin C').
+diet(cholesterol, 'Low-fat, high-fiber diet').
+
+% Rule to suggest diet based on disease
+suggest_diet(Disease) :-
+    diet(Disease, Diet),
+    write('For '), write(Disease), write(', the suggested diet is: '), write(Diet), nl.
