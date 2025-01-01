@@ -1,0 +1,10 @@
+% Define facts with name and date of birth (DOB)
+person('Alice', '1990-05-15').
+person('Bob', '1985-09-25').
+person('Charlie', '1992-03-10').
+person('David', '1988-11-03').
+person('Eve', '1995-07-21').
+
+% Query to find the DOB of a person by their name
+dob(Name, DOB) :-
+    person(Name, DOB).
