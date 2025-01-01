@@ -1,0 +1,24 @@
+% Facts about students, their teachers, and subjects with subject codes
+student('Alice', 'Math').
+student('Bob', 'Science').
+student('Charlie', 'History').
+student('David', 'Math').
+student('Eve', 'Science').
+
+teacher('Math', 'Dr. Smith').
+teacher('Science', 'Prof. Johnson').
+teacher('History', 'Dr. Lee').
+
+subject_code('Math', 'MTH101').
+subject_code('Science', 'SCI102').
+subject_code('History', 'HIS103').
+
+% Rule to get the teacher of a student
+student_teacher(Student, Teacher) :-
+    student(Student, Subject),
+    teacher(Subject, Teacher).
+
+% Rule to get the subject code of a student
+student_subject_code(Student, SubjectCode) :-
+    student(Student, Subject),
+    subject_code(Subject, SubjectCode).
