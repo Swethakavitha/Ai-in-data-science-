@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Improve Your SEO | My Blog</title>
+</head>
+<body>
+
+    <header>
+        <h1>How to Improve Your SEO</h1>
+    </header>
+
+    <section>
+        <h2>1. Research Keywords</h2>
+        <p>Start by researching the most relevant keywords for your business. Tools like <a href="https://www.google.com/trends" target="_blank">Google Trends</a> can help.</p>
+    </section>
+
+    <section>
+        <h2>2. Optimize Your Content</h2>
+        <p>Include keywords naturally in your content. Read our post on <a href="https://yourdomain.com/keyword-strategy">Keyword Strategy</a> for more tips.</p>
+    </section>
+
+    <footer>
+        <p>For more SEO tips, visit our <a href="https://yourdomain.com/seo-tips">SEO Tips page</a>.</p>
+    </footer>
+
+</body>
+</html>
