@@ -1,0 +1,33 @@
+% Facts for the state transitions
+connected(a, b).
+connected(a, c).
+connected(b, d).
+connected(b, e).
+connected(c, e).
+connected(d, g).
+connected(e, g).
+
+% Heuristic values: Heuristic function estimates the cost to the goal (G)
+heuristic(a, 6).
+heuristic(b, 4).
+heuristic(c, 2).
+heuristic(d, 1).
+heuristic(e, 3).
+heuristic(g, 0).  % Goal state has a heuristic of 0
+
+% Best-First Search Algorithm
+best_first_search(Start, Goal) :-
+    best_first_search([Start], Goal, Path),
+    write('Path: '), write(Path), nl.
+
+best_first_search([Goal|Path], Goal, [Goal|Path]) :- !.  % Reached the goal
+best_first_search([Current|Path], Goal, Solution) :-
+    findall(Next, (connected(Current, Next), \+ member(Next, [Current|Path])), Neighbors),
+    sort_neighbors(Neighbors, SortedNeighbors),
+    best_first_search(SortedNeighbors, Goal, Solution).
+
+% Sort neighbors based on their heuristic values (ascending)
+sort_neighbors(Neighbors, SortedNeighbors) :-
+    map_list_to_pairs(heuristic, Neighbors, Pairs),
+    keysort(Pairs, SortedPairs),
+    pairs_values(SortedPairs, SortedNeighbors).
