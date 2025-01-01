@@ -1,0 +1,56 @@
+% Facts: defining symptoms for diseases
+symptom(cold, sneezing).
+symptom(cold, cough).
+symptom(cold, runny_nose).
+
+symptom(flu, fever).
+symptom(flu, cough).
+symptom(flu, body_aches).
+
+symptom(covid19, fever).
+symptom(covid19, cough).
+symptom(covid19, difficulty_breathing).
+symptom(covid19, loss_of_taste).
+
+symptom(allergy, sneezing).
+symptom(allergy, itchy_eyes).
+
+% Rules: Diagnose a disease based on symptoms
+disease(cold) :-
+    symptom(cold, S1),
+    symptom(cold, S2),
+    symptom(cold, S3),
+    user_has_symptom(S1),
+    user_has_symptom(S2),
+    user_has_symptom(S3).
+
+disease(flu) :-
+    symptom(flu, S1),
+    symptom(flu, S2),
+    symptom(flu, S3),
+    user_has_symptom(S1),
+    user_has_symptom(S2),
+    user_has_symptom(S3).
+
+disease(covid19) :-
+    symptom(covid19, S1),
+    symptom(covid19, S2),
+    symptom(covid19, S3),
+    symptom(covid19, S4),
+    user_has_symptom(S1),
+    user_has_symptom(S2),
+    user_has_symptom(S3),
+    user_has_symptom(S4).
+
+disease(allergy) :-
+    symptom(allergy, S1),
+    symptom(allergy, S2),
+    user_has_symptom(S1),
+    user_has_symptom(S2).
+
+% User input: Check if the user has a certain symptom
+user_has_symptom(Symptom) :-
+    write('Do you have the symptom: '), write(Symptom), write('? (yes/no) '),
+    read(Response),
+    (Response == yes -> assert(symptom_present(Symptom));
+     Response == no -> true).
